@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Permision;
+
 import com.example.demo.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -27,22 +28,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                //.antMatchers(HttpMethod.GET, "/client/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
-                // .antMatchers(HttpMethod.POST, "/client/**").hasRole(Role.ADMIN.name())
-                // .antMatchers(HttpMethod.DELETE, "/client/**").hasRole(Role.ADMIN.name())
-                //.antMatchers(HttpMethod.GET, "/client/**").hasAuthority(Permision.READING.getPermission())
-               // .antMatchers(HttpMethod.POST, "/client/**").hasAuthority(Permision.WRITTING.getPermission())
-               // .antMatchers(HttpMethod.DELETE, "/client/**").hasAuthority(Permision.WRITTING.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                .formLogin()
+                .loginPage("/auth/login").permitAll()
+                .defaultSuccessUrl("/auth/success")
+                .failureUrl("/auth/login-error").permitAll()
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/auth/login")
+                ;
 
     }
 
     @Bean
     @Override
     protected UserDetailsService userDetailsService() {
+        //as an alternative of DB
         return new InMemoryUserDetailsManager(
                 User.builder()
                         .username("admin")

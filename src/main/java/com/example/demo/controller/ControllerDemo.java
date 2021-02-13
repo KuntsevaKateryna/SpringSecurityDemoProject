@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.log4j.Log4j2;
-
 import java.util.List;
 
 
@@ -22,8 +21,6 @@ public class ControllerDemo {
     //inject our Bean as an interface:
     @Autowired
    private DemoClientService clientService;
-
-
 
     @PostMapping("/addClient")
     @PreAuthorize("hasAuthority('write')") // from Permision WRITTING("write");
