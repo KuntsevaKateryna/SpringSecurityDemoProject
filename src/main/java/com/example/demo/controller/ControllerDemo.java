@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Client;
-import com.example.demo.repo.ClientRepo;
 import com.example.demo.service.DemoClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

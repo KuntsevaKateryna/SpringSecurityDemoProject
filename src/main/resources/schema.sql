@@ -42,3 +42,4 @@ client int references client(id ),
    salon INT,
     PRIMARY KEY (client, salon));
 
+
